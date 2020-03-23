@@ -1,4 +1,4 @@
-google.charts.load('current', {packages: ['geochart'], 'mapsApiKey':'AIzaSyAo8uyaqeibAp9SynVtLbVnuO1LjzaBnDI'});
+google.charts.load('current', {packages: ['geochart'], 'mapsApiKey': ['MAPSAPIKEY']});
 
 const drawRegionsMap = () => {
     let data = google.visualization.arrayToDataTable([
