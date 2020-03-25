@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <title>Coronavirus Map</title>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="./src/index.js"></script>
+    <script src="./src/chart.js"></script>
+    <script src="vendors/core/main.js"></script>
+    <script src="vendors/daygrid/main.js"></script>
+    <script src="./src/calendar.js"></script>
+    
+    <link rel="stylesheet" href="vendors/core/main.min.css">
+    <link rel="stylesheet" href="vendors/daygrid/main.min.css">
     <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css">
     <link rel="stylesheet" href="./styles/styles.css">
   </head>
@@ -13,13 +19,24 @@
       <h2>Coronavirus Map</h2>
     </header>
 
+    <!-- TOGGLE TO EDIT MODE -->
+    <div class="row flex-center">
+      <fieldset class="form-group">
+        <legend>Click to Enter Edit Mode Where You Can Add Countries to Follow and Track:</legend>
+        <label for="paperRadios1" class="paper-radio">
+          <input type="radio" name="paperRadios" id="paperRadios1" value="favoriteMode"> <span>Add Country Mode<span>
+        </label>
+      </fieldset>
+    </div>
+
     <div class="row flex-center">
         <div class="border border-secondary shadow shadow-hover">
-            <div id="map" class="padding-small" style="width:750px; height:520px;">
+            <div id="map" class="padding-small" style="width:770px; height:535px;">
               <!-- Add Map -->
             </div>
         </div>
     </div>
+
 
     <!-- MODAL HTML -->
     <input class="modal-state" id="modal-1" type="checkbox">
@@ -35,7 +52,7 @@
     </div>
     </div>
 
-
+    <!-- CALENDAR HTML -->
     <div id="calendar">
 
     </div>
