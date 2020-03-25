@@ -1,6 +1,11 @@
 
+  #map {
+    max-width: 700px;
+    /* margin: 60px; */
+  }
+  
   #calendar {
-      max-width: 900px;
-      margin:40px auto;
+      max-width: 650px;
+      margin:60px;
   }
   

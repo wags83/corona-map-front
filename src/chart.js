@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             //get country data
             countries.forEach(country => {
-                // let lastDay = country.days.length - 1;
+            
                 let map_row = [country.country.name, country.cases];
                 let modal_row = [country.country.name, country.cases, country.deaths, country.recovered, country.country_id];
     
@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
             //draws map after data
             drawRegionsMap(map_array, modal_array);
         
-            })
-            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
     }
     
     const getCountryByDaysData = (id) => {
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let data = google.visualization.arrayToDataTable(display_array);
         let options = {
             colorAxis: {minValue: 0,  colors: ['#34e8eb', '#3d34eb']},
-            legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 11}},
+            legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
             tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
         };
         let chart = new google.visualization.GeoChart(document.getElementById('map'));
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
                     //get days from country end point
                     const days = Promise.resolve(getCountryByDaysData(countryId));
-                    console.log(days)
+                
                     days.then(days => {
                         const lineChartArray = [['Day', 'Cases', 'Deaths', 'Recovered']];
     
