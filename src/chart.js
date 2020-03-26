@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //===============  VARIABLES ========================//
 
-    const latestUrl = "http:localhost:3000/latest_data";
+    const latestUrl = "http://localhost:3000/latest_data";
     const countriesUrl = "http://localhost:3000/countries";
     const userUrl = "http://localhost:3000/users";
     const favoriteUrl = "http://localhost:3000/favorites";
     const favBtn = document.getElementById("fav-btn");
+    const modal = document.getElementById("modal-1")
     const userId = 1;
+    const modal_array = []; 
     
     //===============  GET COUNTRY FUNCTIONS ========================//
     
@@ -18,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(countries => {
             const map_array = [['Country', 'Number of Cases']];
-            const modal_array = [];
             
             //get country data
             countries.forEach(country => {
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     
             //draws map after data
-            drawRegionsMap(map_array, modal_array);
+            drawRegionsMap(map_array);
         
         })
         .catch(err => console.log(err));
@@ -51,13 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const renderFavorite = (country) => {
         const div = document.getElementById("countries-tracked");
         const a = document.createElement("a");
-        a.setAttribute("href", "#");
         a.setAttribute("id", country.id);
         a.innerHTML = country.name;
         div.appendChild(a);
+        const countryData = modal_array.find(thisCountry => thisCountry[0] === country.name);
     
         a.onclick = () => {
-            
+            modal.checked = true;
+            renderModal(country.name, countryData);
         }
     }
 
@@ -159,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const renderTrackButton = () => {
             const buttonResults = Promise.resolve(checkIfUserFollowsCountry(userId, countryId));
             buttonResults.then(favorite => {
-                console.log(favorite);
                 if (favorite.length > 0){
                     button.innerHTML = "x Stop Tracking";
                     button.onclick = () => {
@@ -204,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //===============  DRAW MAP FUNCTION ========================//
     
     
-    const drawRegionsMap = (display_array, data_array) => {
+    const drawRegionsMap = (display_array) => {
         let data = google.visualization.arrayToDataTable(display_array);
         let options = {
             colorAxis: {minValue: 0,  colors: ['#34e8eb', '#3d34eb']},
@@ -219,10 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
            if (selectedCountry) {
                 let currentCountry = data.getValue(selectedCountry.row, 0);
-                const modal = document.getElementById("modal-1")
                 modal.checked = true;
 
-                const countryData = data_array.find(country => country[0] === currentCountry);
+                const countryData = modal_array.find(country => country[0] === currentCountry);
                 renderModal(currentCountry, countryData);
     
                 //===============  POTENTIAL ADD ON FUNCTIONALITY  ========================//
