@@ -8,14 +8,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const countriesUrl = "http://localhost:3000/countries";
     const userUrl = "http://localhost:3000/users";
     const favoriteUrl = "http://localhost:3000/favorites";
-    const favBtn = document.getElementById("fav-btn");
-    const modal = document.getElementById("modal-1")
-    const userId = 1;
+    const modal = document.getElementById("modal-1");
     const modal_array = []; 
+    const fave_array = [["Country", "Selected"]];
+    const favBtn = document.getElementById("fav-btn");
+    const favRadios = document.getElementById("favRadios");
+    let userId = 1;
+    let editMode = false;
+    let chart;
+
     
     //===============  GET COUNTRY FUNCTIONS ========================//
     
-    const getCountryData = () => {
+    const getLatestData = () => {
         fetch(latestUrl)
         .then(res => res.json())
         .then(countries => {
@@ -34,11 +39,23 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     
             //draws map after data
-            drawRegionsMap(map_array);
+            drawRegionsMapCases(map_array);
         
         })
         .catch(err => console.log(err));
     }
+
+
+    const getCountryByName = (name) => {
+        return fetch(countriesUrl)
+            .then(res => res.json())
+            .then(countries => {
+                const found = countries.find(country => country.name === name);
+                return found;
+            })
+            .catch(err => console.log(err));
+    }
+
     
     const getCountryByDaysData = (id) => {
         return fetch(`${countriesUrl}/${id}`)
@@ -64,12 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    const getFavoritesbyUser = (id) => {
+    const collectUsersFaves = (country) => {
+        const editArray = [country.name, 1];
+        fave_array.push(editArray);
+    }
+
+
+    const getFavoritesbyUser = (id, fn) => {
         return fetch(`${userUrl}/${id}`)
             .then(res => res.json())
             .then(favorites => {
                 favorites.forEach(fave => {
-                    renderFavorite(fave.country);
+                    fn(fave.country);
                 })
             })
             .catch(err => console.log(err));
@@ -127,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar.style.width = "0";
         }
 
-        getFavoritesbyUser(userId)
+        getFavoritesbyUser(userId, renderFavorite);
     }
 
 
@@ -185,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const lineChartArray = [['Day', 'Cases', 'Deaths', 'Recovered']];
 
             days.forEach(day => {
-                const lineRow = [day.date, day.cases, day.deaths, day.recovered];
+                const lineRow = [day.date.slice(1,5), day.cases, day.deaths, day.recovered];
                 lineChartArray.push(lineRow);
             })
 
@@ -202,17 +225,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     
-    //===============  DRAW MAP FUNCTION ========================//
+    //===============  DRAW MAP FUNCTIONS ========================//
     
     
-    const drawRegionsMap = (display_array) => {
+    const drawRegionsMapCases = (display_array) => {
+        chart = new google.visualization.GeoChart(document.getElementById('map'));
         let data = google.visualization.arrayToDataTable(display_array);
         let options = {
             colorAxis: {minValue: 0,  colors: ['#34e8eb', '#3d34eb']},
             legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
             tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
         };
-        let chart = new google.visualization.GeoChart(document.getElementById('map'));
     
         //what happens on click for each region
         const selectHandler = () => {
@@ -237,21 +260,67 @@ document.addEventListener("DOMContentLoaded", () => {
            }
         }
     
-        //===============  ADD SELECT HANDLER AND DRAW CHART ========================//
-    
-        google.visualization.events.addListener(chart, 'select', selectHandler);
         
+        //add select handler and draw chart
+        google.visualization.events.addListener(chart, 'select', selectHandler);    
         chart.draw(data, options);
+    }
+
+    const drawEditingMap = () => {
+        chart = new google.visualization.GeoChart(document.getElementById('map'));
+        const favePromise = Promise.resolve(getFavoritesbyUser(userId, collectUsersFaves));
+        favePromise.then(() => {
+
+        
+            let data = google.visualization.arrayToDataTable(fave_array);
+            let options = {
+                colorAxis: {minValue: 0,  colors: ['#fff', '#f54242']},
+                legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
+                tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
+            };
+            chart.draw(data, options);
+    
+            //what happens on click for each region
+            const selectHandler = (e) => {
+                console.log("REGION: ", e.region);
+                const countryName = getCountryName(e.region);
+                data.addRow([countryName, 1]);
+                const countryPromise = Promise.resolve(getCountryByName(countryName));
+                countryPromise.then(country => {
+                    addFavorite(country.id);
+                })
+                chart.draw(data, options);
+    
+             }
+         
+             
+             //add select handler and draw chart
+             google.visualization.events.addListener(chart, 'regionClick', selectHandler); 
+
+        })
     }
     
     //===============  CALLBACK TO START FETCHING COUNTRY DATA ONCE LOADED ========================//
     
-    google.charts.setOnLoadCallback(getCountryData);
+    google.charts.setOnLoadCallback(getLatestData);
     
     //===============  EVENT LISTENERS  ========================//
     
     favBtn.onclick = () => {
         renderFavoriteDashboard();
+    }
+
+    favRadios.onclick = () => {
+        if (editMode) {
+            favRadios.checked = false;
+            editMode = false;
+            getLatestData();
+        } else {
+            favRadios.checked = true;
+            editMode = true;
+            chart.clearChart();
+            drawEditingMap();
+        }
     }
 });
 
