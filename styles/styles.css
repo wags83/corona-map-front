@@ -1,11 +1,56 @@
 
+  main {
+    padding-top: 125px;
+  }
+
+  .sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 200;
+    top:0;
+    right:0;
+    background-color:#edf0eb;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 1.5s;
+  }
+
+  .sidebar a {
+    padding: 8px 8px 8px 20px;
+    font-size: 22px;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .sidebar p {
+    padding: 8px 8px 8px 20px;
+    font-size: 24px;
+    text-decoration: underline;
+    display: block;
+    transition: 0.3;
+
+  }
+
+  .sidebar .closebtn {
+    position: absolute;
+    color:#41403e;
+    top: 0;
+    font-size: 32px;
+    margin-right: 50px;
+  }
+
+  a {
+    background-image: none;
+  }
+
   #map {
     max-width: 700px;
-    /* margin: 60px; */
+  
   }
   
   #calendar {
       max-width: 650px;
-      margin:60px;
+      margin:80px;
   }
   

@@ -18,61 +18,74 @@
 
     <nav class="border fixed split-nav">
       <div class="nav-brand">
-        <h3><a href="#">Project Your Very Own Viral Outbreak! Corona? Herpes? Gonorhia! You name iT!</a></h3>
+        <h3><a href="#">Coronavirus Project & Track</a></h3>
         <!-- Coronavirus Project & Track -->
       </div>
      
-          <ul class="inline">
-            <li>
-              <button>
-              <!-- <label for="collapsible1"> -->
-                <div class="bar1"></div>
-                <div class="bar2"></div>
-                <div class="bar3"></div>
-              <!-- </label> -->
-            </button>
+      <ul class="inline">
+        <li>
+          <button id="fav-btn">
+          <!-- <label for="collapsible1"> -->
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+          <!-- </label> -->
+        </button>
 
-            </li>
-          </ul>
+        </li>
+      </ul>
     </nav>
 
+    <!-- Favorites Side Bar -->
+    <div id="fav-sidebar" class="sidebar border fixed">
+      <a href="javascript:void(0)" class="closebtn" id="closebtn">&times;</a>
+      <p>My Countries to Track</p>
+      <div id="countries-tracked">
+        <!-- Dynamically add Country Links -->
+      </div>
+    </div>
+
+
     <!-- TOGGLE TO EDIT MODE -->
-    <div class="row flex-center">
-      <fieldset class="form-group">
-        <legend>Click to Enter Edit Mode Where You Can Add Countries to Follow and Track:</legend>
-        <label for="paperRadios1" class="paper-radio">
-          <input type="radio" name="paperRadios" id="paperRadios1" value="favoriteMode"> <span>Add Country Mode<span>
-        </label>
-      </fieldset>
-    </div>
-
-    <div class="row flex-center">
-        <div class="border border-secondary shadow shadow-hover">
-            <div id="map" class="padding-small" style="width:700px; height:650px;">
-              <!-- Add Map -->
-            </div>
-        </div>
-
-        <!-- CALENDAR HTML -->
-        <div id="calendar">
-
-        </div>
-    </div>
-
-
-    <!-- MODAL HTML -->
-    <input class="modal-state" id="modal-1" type="checkbox">
-    <div class="modal">
-    <label class="modal-bg" for="modal-1"></label>
-    <div class="modal-body">
-        <label class="btn-close" for="modal-1">X</label>
-        <h4 id="region-modal-title" class="modal-title">Modal Title</h4>
-        <h5 class="modal-subtitle">Cases:</h5><span id="modal-cases"></span>
-        <h5 class="modal-subtitle">Deaths:</h5><span id="modal-deaths"></span>
-        <h5 class="modal-subtitle">Recovered:</h5><span id="modal-recovered"></span>
-        <div id="curve-chart" style="width: 700px; height: 380px;"></div>
-    </div>
-    </div>
+    <main>
+      <div class="row flex-center">
+        <fieldset class="form-group">
+          <legend>Click to Enter Edit Mode Where You Can Add Countries to Follow and Track:</legend>
+          <label for="paperRadios" class="paper-radio">
+            <input type="radio" name="paperRadios" id="paperRadios" value="favoriteMode"> <span>Add Country Mode<span>
+          </label>
+        </fieldset>
+      </div>
+  
+      <div class="row flex-center">
+          <div class="border border-secondary shadow shadow-hover">
+              <div id="map" class="padding-small" style="width:700px; height:650px;">
+                <!-- Add Map -->
+              </div>
+          </div>
+  
+          <!-- CALENDAR HTML -->
+          <div id="calendar">
+  
+          </div>
+      </div>
+  
+  
+      <!-- MODAL HTML -->
+      <input class="modal-state" id="modal-1" type="checkbox">
+      <div class="modal">
+      <label class="modal-bg" for="modal-1"></label>
+      <div class="modal-body">
+          <label class="btn-close" for="modal-1">X</label>
+          <h4 id="region-modal-title" class="modal-title">Modal Title</h4>
+          <h5 class="modal-subtitle">Cases:</h5><span id="modal-cases"></span>
+          <h5 class="modal-subtitle">Deaths:</h5><span id="modal-deaths"></span>
+          <h5 class="modal-subtitle">Recovered:</h5><span id="modal-recovered"></span>
+          <div id="curve-chart" style="width: 700px; height: 380px;"></div>
+          <button id="follow-btn"></button>
+      </div>
+      </div>
+    </main>
 
     
 
