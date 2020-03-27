@@ -3,6 +3,11 @@
     padding-top: 125px;
   }
 
+  #alerts {
+    margin-left: 35px;
+    width: 75%;
+  }
+
   .sidebar {
     height: 100%;
     width: 0;

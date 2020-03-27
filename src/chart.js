@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fave_array = [["Country", "Selected"]];
     const favBtn = document.getElementById("fav-btn");
     const favRadios = document.getElementById("favRadios");
+    const alerts = document.getElementById("alerts");
     let userId = 1;
     let editMode = false;
     let chart;
@@ -116,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(fave => {
                 renderFavorite(fave.country)
+                renderAlert('add', fave.country.name)
             })
             .catch(err => console.log(err));
     }
@@ -134,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(fave => {
                 const a = document.getElementById(fave.country_id);
                 a.remove();
+                renderAlert('delete', fave.country.name);
             })
             .catch(err => console.log(err));
     };
@@ -161,6 +164,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 return favorites.filter(fave => fave.country.id === countryId);
             })
             .catch(err => console.log(err));
+    }
+
+    //==================  RENDER ALERT FUNCTIONS ===========================//
+
+    const renderAlert = (type, country) => {
+        const input = document.createElement("input");
+        input.setAttribute("class", "alert-state");
+        input.setAttribute('id', `${country}-${type}-1`);
+        input.setAttribute("type", "checkbox");
+        const divAlert = document.createElement("div");
+        type === "add" ? divAlert.setAttribute("class", "alert alert-secondary dismissible") : divAlert.setAttribute("class", "alert alert-danger dismissible");
+        const label = document.createElement("label");
+        label.setAttribute("class", "btn-close");
+        label.setAttribute("for", `${country}-${type}-1`);
+        label.innerHTML = "X";
+        divAlert.innerHTML = type === "add" ? `${country} was added to your dashboard!` : `${country} was deleted from your dashboard`;
+        divAlert.appendChild(label);
+        alerts.appendChild(input);
+        alerts.appendChild(divAlert);
     }
 
 
@@ -286,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const countryName = getCountryName(e.region);
                 const row = data.getFilteredRows([{column: 0, value: countryName}]);
                 if (row.length > 0){
-                    console.log(row);
                     data.removeRow(row[0]);
                     const countryPromise = Promise.resolve(getCountryByName(countryName));
                     countryPromise.then(country => {
