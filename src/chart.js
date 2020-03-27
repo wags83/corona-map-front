@@ -284,13 +284,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const selectHandler = (e) => {
                 console.log("REGION: ", e.region);
                 const countryName = getCountryName(e.region);
-                data.addRow([countryName, 1]);
-                const countryPromise = Promise.resolve(getCountryByName(countryName));
-                countryPromise.then(country => {
-                    addFavorite(country.id);
-                })
+                const row = data.getFilteredRows([{column: 0, value: countryName}]);
+                if (row.length > 0){
+                    console.log(row);
+                    data.removeRow(row[0]);
+                    const countryPromise = Promise.resolve(getCountryByName(countryName));
+                    countryPromise.then(country => {
+                        const getFavePromise = Promise.resolve(checkIfUserFollowsCountry(userId, country.id));
+                        getFavePromise.then(fave => {
+                            deleteFavorite(fave[0].id)
+                        })
+                    })
+                } else {
+                    data.addRow([countryName, 1]);
+                    const countryPromise = Promise.resolve(getCountryByName(countryName));
+                    countryPromise.then(country => {
+                        addFavorite(country.id);
+                    })
+                }
                 chart.draw(data, options);
-    
              }
          
              
