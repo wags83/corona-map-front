@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //===============  VARIABLES ========================//
 
     const latestUrl = "http://localhost:3000/latest_data";
+    const popUrl = "http://localhost:3000/latest_data_by_population";
     const countriesUrl = "http://localhost:3000/countries";
     const userUrl = "http://localhost:3000/users";
     const favoriteUrl = "http://localhost:3000/favorites";
@@ -13,19 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const fave_array = [["Country", "Selected"]];
     const favBtn = document.getElementById("fav-btn");
     const favRadios = document.getElementById("favRadios");
+    const popRadios = document.getElementById("popRadios");
     const alerts = document.getElementById("alerts");
     let userId = 1;
     let editMode = false;
+    let popMode = false;
     let chart;
 
     
     //===============  GET COUNTRY FUNCTIONS ========================//
     
-    const getLatestData = () => {
-        fetch(latestUrl)
+    const getLatestData = (url) => {
+        fetch(url)
         .then(res => res.json())
         .then(countries => {
-            const map_array = [['Country', 'Number of Cases']];
+            const type = url === latestUrl ? "latest" : "pop";
+            let map_array;
+            if (type === 'latest'){
+                map_array = [['Country', 'Number of Cases']];
+            } else {
+                map_array = [['Country', 'Number of Cases per 100k']]
+            }
             
             //get country data
             countries.forEach(country => {
@@ -40,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     
             //draws map after data
-            drawRegionsMapCases(map_array);
+            drawRegionsMapCases(type, map_array);
         
         })
         .catch(err => console.log(err));
@@ -166,9 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(err => console.log(err));
     }
 
-    //==================  RENDER ALERT FUNCTIONS ===========================//
+    //==================  RENDER ALERT FUNCTION ===========================//
 
     const renderAlert = (type, country) => {
+        alerts.innerHTML = "";
         const input = document.createElement("input");
         input.setAttribute("class", "alert-state");
         input.setAttribute('id', `${country}-${type}-1`);
@@ -250,14 +260,23 @@ document.addEventListener("DOMContentLoaded", () => {
     //===============  DRAW MAP FUNCTIONS ========================//
     
     
-    const drawRegionsMapCases = (display_array) => {
+    const drawRegionsMapCases = (type, display_array) => {
         chart = new google.visualization.GeoChart(document.getElementById('map'));
         let data = google.visualization.arrayToDataTable(display_array);
-        let options = {
-            colorAxis: {minValue: 0,  colors: ['#34e8eb', '#3d34eb']},
-            legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
-            tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
-        };
+        let options;
+        if (type === "latest"){
+            options = {
+                colorAxis: {minValue: 0,  colors: ['#34e8eb', '#3d34eb']},
+                legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
+                tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
+            };
+        } else {
+            options = {
+                colorAxis: {minValue: 0,  colors: ['#86f7a4', '#0f8a30']},
+                legend: {textStyle: {fontName: "Patrick Hand SC", fontSize: 13}},
+                tooltip: {textStyle: {fontName: "Patrick Hand SC"}}
+            };
+        }
     
         //what happens on click for each region
         const selectHandler = () => {
@@ -335,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     //===============  CALLBACK TO START FETCHING COUNTRY DATA ONCE LOADED ========================//
     
-    google.charts.setOnLoadCallback(getLatestData);
+    google.charts.setOnLoadCallback(getLatestData(latestUrl));
     
     //===============  EVENT LISTENERS  ========================//
     
@@ -347,12 +366,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (editMode) {
             favRadios.checked = false;
             editMode = false;
-            getLatestData();
+            getLatestData(latestUrl);
         } else {
             favRadios.checked = true;
             editMode = true;
-            chart.clearChart();
+            // chart.clearChart();
             drawEditingMap();
+        }
+    }
+
+    popRadios.onclick = () => {
+        if (popMode){
+            popRadios.checked = false;
+            popMode = false;
+            getLatestData(latestUrl);
+        } else {
+            popRadios.checked = true;
+            popMode = true;
+            getLatestData(popUrl);
         }
     }
 });

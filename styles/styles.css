@@ -3,9 +3,21 @@
     padding-top: 125px;
   }
 
+  .calendarInput {
+    width: 30px;
+    height: 20%;
+    font-size: 10px;
+    position: absolute;
+  }
+
   #alerts {
     margin-left: 35px;
     width: 75%;
+  }
+
+  .form-group .paper-radio{
+    display:inline-block;
+    margin-left: 7px;
   }
 
   .sidebar {

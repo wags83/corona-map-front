@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <title>Coronavirus Map</title>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src ="./src/countryCode.js"></script>
@@ -57,9 +58,12 @@
 
       <div class="row flex-center">
         <fieldset class="form-group">
-          <legend>Click to Enter Edit Mode Where You Can Add Countries to Follow and Track:</legend>
+          <legend>Click to Enter a Different Map Mode:</legend>
           <label for="favRadios" class="paper-radio">
-            <input type="radio" name="paperRadios" id="favRadios" value="favoriteMode"> <span>Add Country Mode<span>
+            <input type="radio" name="paperRadios" id="favRadios" value="favoriteMode"> <span>Add Country Map<span>
+          </label>
+          <label for="popRadios" class="paper-radio">
+            <input type="radio" name="paperRadios" id="popRadios" value="popMode"> <span>Corona per Population Map<span>
           </label>
         </fieldset>
       </div>
